@@ -5,9 +5,6 @@ using bicycle_racing.Shared.Models.Entities;
 using bicycle_racing.Server.Models.Contexts;
 using System.Xml.Linq;
 using System.Security.Policy;
-using Microsoft.EntityFrameworkCore;
-using Grpc.Core.Logging;
-using Grpc.Core;
 
 namespace realtime_game.Server.Services
 {
@@ -16,24 +13,12 @@ namespace realtime_game.Server.Services
 
         public async UnaryResult<int> RegistUserAsync(string name)
         {
-            Console.WriteLine("--------------------");
-            GrpcEnvironment.Logger.Debug("Debug");
-            GrpcEnvironment.Logger.Info("Info");
-            GrpcEnvironment.Logger.Warning("Warning");
-            GrpcEnvironment.Logger.Error("Error");
             using var context = new GameDbContext();
             //バリデーションチェック(名前登録済みかどうか)
             if (context.Users.Count() > 0 &&
                   context.Users.Where(user => user.Name == name).Count() > 0)
             {
                 throw new ReturnStatusException(Grpc.Core.StatusCode.InvalidArgument, "");
-            }
-
-            // AnyAsyncを使うことで、「存在するかどうか」だけを高速に確認し、接続時間を短縮します
-            // Microsoft.EntityFrameworkCore の using が必要です
-            if (await context.Users.AnyAsync(user => user.Name == name))
-            {
-                throw new ReturnStatusException(Grpc.Core.StatusCode.InvalidArgument, "既に登録されています");
             }
 
             //テーブルにレコードを追加
@@ -48,8 +33,6 @@ namespace realtime_game.Server.Services
             context.Users.Add(user);
             await context.SaveChangesAsync();
             return user.Id;
-
-           // return 0;
         }
 
         public async UnaryResult<User> GetUserAsyncWithID(int id)
@@ -58,6 +41,7 @@ namespace realtime_game.Server.Services
             using var context = new GameDbContext();
 
             User user = context.Users.Where(user => user.Id == id).First();
+
 
             return user;
         }
@@ -97,29 +81,23 @@ namespace realtime_game.Server.Services
 
         public async UnaryResult<User> UpdateUserAsync(int id, string name)
         {
-            Console.WriteLine("ユーザー更新開始");
             using var context = new GameDbContext();
             User user = context.Users.Where(user => user.Id == id).First();
             user.Name = name;
             await context.SaveChangesAsync();
 
 
-            Console.WriteLine("ユーザー更新完了");
+
             return user;
         }
 
         public async UnaryResult<User> ChangeStateUserAsync(int id, int state)
         {
-            Console.WriteLine("テータス更新開始");
             using var context = new GameDbContext();
             User user = context.Users.Where(user => user.Id == id).First();
-            
-            
             user.State = state;
             await context.SaveChangesAsync();
 
-
-            Console.WriteLine("テータス更新完了");
             return user;
         }
 

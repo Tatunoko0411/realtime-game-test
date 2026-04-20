@@ -16,6 +16,7 @@ public class MatchingManager : MonoBehaviour
     public float waitTime;
 
     [SerializeField] Text CountText;
+    [SerializeField] Button StartButton;
 
     bool isExit;
 
@@ -31,33 +32,50 @@ public class MatchingManager : MonoBehaviour
         }
 
         isExit = false;
+        isHost = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isHost)
+        if (isHost) 
+        { 
+            StartButton.gameObject.SetActive(true);
+        }
+        else
         {
-            if (!CountText.gameObject.activeSelf)
-            {
-                CountText.gameObject.SetActive(true);
-            }
+            StartButton.gameObject.SetActive(false);
+        }
+    
 
-            waitTime += Time.deltaTime;
-            if (waitTime > 30)
+        if (!CountText.gameObject.activeSelf)
+        {
+            CountText.gameObject.SetActive(true);
+        }
+
+        waitTime += Time.deltaTime;
+        if (waitTime > 30)
+        {
+            if (isHost)
             {
                 netWorkManager.StartGame(GameManager.StageId);
-                enabled = false;
-                SetCount(-1);
             }
-
-            SetCount(30 - (int)waitTime);
+            enabled = false;
+       
+            return;
         }
+
+        SetCount(30 - (int)waitTime);
     }
 
+    /// <summary>
+    /// ゲームへ遷移
+    /// </summary>
     public IEnumerator StartGame()
     {
+        enabled = false ;
         int cnt = 3;
+        SetCount(-1);
         while (true)
         {
             yield return new WaitForSeconds(1);
@@ -72,16 +90,24 @@ public class MatchingManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    ///カウントダウンのUI変更 
+    /// </summary>
+    /// <param count="Count">残り時間（-1の場合はゲーム開始通知に変える）</param>
     public void SetCount(int Count)
     {
-        if(Count <= -1)
+        CountText.text = Count.ToString();
+        if (Count <= -1)
         {
             CountText.text = "ゲームを開始します";
         }
 
-        CountText.text = Count.ToString();
+
     }
 
+    /// <summary>
+    /// マッチング退出
+    /// </summary>
     public void ExitMatching()
     {
         if (!isExit)
@@ -90,5 +116,13 @@ public class MatchingManager : MonoBehaviour
             isExit = true;
         }
         Initiate.Fade("TitleScene", Color.black, 1.5f);
+    }
+
+    /// <summary>
+    /// マッチング終了
+    /// </summary>
+    public void EndMatcing()
+    {
+        netWorkManager.StartGame(GameManager.StageId);
     }
 }

@@ -36,9 +36,14 @@ public class LogManager : MonoBehaviour
         }
    }
 
+　/// <summary>
+ /// ログの設定
+ /// </summary>
+ /// <param name="log">ログ内容</param>
    public static void SetLogText(string log)
     {
+        text.text = "";
         text.text = log;
-        LogTime = 10f;
+        LogTime = 3f;
     }
 }

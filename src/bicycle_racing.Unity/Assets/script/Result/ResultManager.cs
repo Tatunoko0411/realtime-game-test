@@ -14,6 +14,8 @@ public class ResultManager : MonoBehaviour
     [SerializeField] GameObject BikePrefab;
     int Count;
 
+    bool isLeave;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -34,6 +36,10 @@ public class ResultManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// プレイヤーの配置
+    /// </summary>
+    /// <param name="user">ユーザ情報</param>
     public void SetPlayer(User user)
     {
         GameObject obj = Instantiate(BikePrefab,
@@ -44,9 +50,19 @@ public class ResultManager : MonoBehaviour
 
         bikeController.NameText.text = user.Name;
 
+        Vector3 direction = Camera.main.transform.position - bikeController.NameText.transform.position;
+        bikeController.NameText.transform.rotation = Quaternion.LookRotation(-direction);
+
+        bikeController.gameObject.transform.localScale =new Vector3(1.5f,1.5f,1.5f);
+
+
+
         Count++;
     }
 
+    /// <summary>
+    /// マッチング遷移
+    /// </summary>
     public void Retry()
     {
         netWorkManager.LeaveRoom();
@@ -54,9 +70,16 @@ public class ResultManager : MonoBehaviour
         Initiate.Fade("MatcingManager",Color.black,1.5f);
     }
 
+    /// <summary>
+    /// タイトル遷移
+    /// </summary>
     public void MoveTitle()
     {
-        netWorkManager.LeaveRoom();
+        if (!isLeave)
+        {
+            isLeave =true;
+            netWorkManager.LeaveRoom();
+        }
 
         Initiate.Fade("TitleScene",Color.black,1.5f);
 

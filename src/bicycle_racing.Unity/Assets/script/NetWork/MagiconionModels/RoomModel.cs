@@ -1,4 +1,4 @@
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using MagicOnion.Client;
 using MagicOnion;
 using bicycle_racing.Shared.Interfaces.StreamingHubs;
@@ -11,45 +11,77 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using static UnityEngine.Rendering.DebugUI.Table;
+using Grpc.Net.Client;
 
 public class RoomModel : BaseModel, IRoomHubReceiver
 {
-    private GrpcChannelx channel;
+    private GrpcChannel channel;
     private IRoomHub roomHub;
 
-    //�@�ڑ�ID
+    //　接続ID
     public Guid ConnectionId { get; set; }
 
-    //�@���[�U�[�ڑ��ʒm
+    //　ユーザー接続通知
     public Action<JoinedUser> OnJoinedUser { get; set; }
 
-    //�@���[�U�[�ؒf�ʒm
+    //　ユーザー切断通知
     public Action<JoinedUser> OnLeavedUser { get; set; }
 
-    //���[�U�[�̈ړ��ʒm
+    //ユーザーの移動通知
     public Action<Guid,Vector3,Quaternion,Vector3> OnMoveUser { get; set; }
-    //���[�U�[�̃A�C�e���ݒu�ʒm
+    //ユーザーのアイテム設置通知
     public Action<Guid,Vector3,int>OnPutItemUser { get; set; }
 
-   //���[�U�[�̃`�F�b�N�|�C���g�ʉߒʒm
+   //ユーザーのチェックポイント通過通知
     public Action<Guid> OnPassCheckPoint { get; set; }
-   //���[�U�[�̃S�[���ʒm
+   //ユーザーのゴール通知
     public Action<Guid> OnGoalUser { get; set; }
-    //�}�b�`���O�m��ʒm
+    //マッチング確定通知
     public Action<int> OnMenberConfirmed { get; set; }
-    //�Q�[���J�n�ʒm
+    //ゲーム開始通知
     public Action OnStartGame { get; set; }
     public Dictionary<Guid, JoinedUser> userTable { get; set; } = new Dictionary<Guid, JoinedUser>();
 
-    //�@MagicOnion�ڑ�����
-    public async UniTask ConnectAsync()
+
+    // MagicOnion接続処理
+    public async UniTask ConnectAsync()
     {
-        channel = GrpcChannelx.ForAddress(ServerURL);
-        roomHub = await StreamingHubClient.
-             ConnectAsync<IRoomHub, IRoomHubReceiver>(channel, this);
-        this.ConnectionId = await roomHub.GetConnectionId();
+        try
+        {
+            Debug.Log("ConnectAsync start");// ★修正: 共通プロバイダーから、設定済みのチャンネルをもらうだけ！
+
+            channel = GrpcChannelProvider.GetChannel();
+            Debug.Log("Connecting to Hub...");
+
+            try
+            {
+             
+                // 第3引数の host は省略（null）するため、名前付き引数を使うのが安全です
+                this.roomHub = await MagicOnion.Client.StreamingHubClient.ConnectAsync<IRoomHub, IRoomHubReceiver>(
+                                                                                                                   channel,
+                                                                                                                   this,
+                                                                                                                   option: commonCallOptions
+                                                                                                                   );
+
+                Debug.Log("★Success: Connected with CallOptions Headers!");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"ConnectAsync failed: {e}");
+            }
+
+            Debug.Log("ConnectAsync Success!");
+
+            this.ConnectionId = await roomHub.GetConnectionId();
+            Debug.Log(ConnectionId);
+           // myObject = GameObject.Find("Player").gameObject;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("ConnectAsync failed: " + ex);
+        }
     }
-    //�@MagicOnion�ؒf����
+
     public async UniTask DisconnectAsync()
     {
         
@@ -62,30 +94,35 @@ public class RoomModel : BaseModel, IRoomHubReceiver
         roomHub = null; channel = null;
     }
 
-    //�@�j������ 
+    //　破棄処理 
     async void OnDestroy()
     {
         
         DisconnectAsync();
     }
 
-    public async UniTask JoinAsync( int userId,int StageId)
+
+    public async UniTask JoinAsync(int userId, int StageId)
     {
         JoinedUser[] users = await roomHub.JoinAsync(userId, StageId);
-        foreach (JoinedUser user in users)
-        {
+        // Debug.Log($"ルーム名: {roomName}");
+        userTable = new Dictionary<Guid, JoinedUser>();
 
-            if(user == null) continue;
-            userTable[user.ConnectionId] = user;  //�ێ�
+        
+        // ルーム全員分の情報が来るので、自分以外のオブジェクトを生成する
+        foreach (var user in users)
+        {
+            userTable[user.ConnectionId] = user;
 
             if (OnJoinedUser != null)
             {
-                
-                
                 OnJoinedUser(user);
+                Debug.Log($"接続ID: {user.ConnectionId}, ユーザーID: {user.UserData.Id}, ユーザー名: {user.UserData.Name}");
             }
         }
 
+        // 接続できたら自分の位置情報を共有する
+        InvokeRepeating("MoveAsync", 0, 0.1f);
     }
 
 
@@ -94,7 +131,7 @@ public class RoomModel : BaseModel, IRoomHubReceiver
         JoinedUser[] users = await roomHub.JoinFriendAsync(userId, StageId,RoomName);
         foreach (JoinedUser user in users)
         {
-            userTable[user.ConnectionId] = user;  //�ێ�
+            userTable[user.ConnectionId] = user;  //保持
 
             if (OnJoinedUser != null)
             {
@@ -141,7 +178,7 @@ public class RoomModel : BaseModel, IRoomHubReceiver
         await roomHub.GoalAsync(rank);
     }
 
-    //�@�����ʒm (IRoomHubReceiver�C���^�t�F�[�X�̎���)
+    //　入室通知 (IRoomHubReceiverインタフェースの実装)
     public void OnJoin(JoinedUser user)
     {
         userTable[user.ConnectionId] = user;
@@ -151,10 +188,10 @@ public class RoomModel : BaseModel, IRoomHubReceiver
         }
     }
 
-    //�@�ޏo�ʒm (IRoomHubReceiver�C���^�t�F�[�X�̎���)
+    //　退出通知 (IRoomHubReceiverインタフェースの実装)
     public void OnLeave(Guid ID)
     {
-        Debug.Log($"������F{ID}");
+        Debug.Log($"消すよ：{ID}");
 
         JoinedUser user;
             
@@ -167,7 +204,7 @@ public class RoomModel : BaseModel, IRoomHubReceiver
         
     }
 
-    // �ړ��ʒm(IRoomHubReceiver�C���^�t�F�[�X�̎���)
+    // 移動通知(IRoomHubReceiverインタフェースの実装)
     public void OnMove(Guid ID,Vector3 pos,Quaternion rot,Vector3 scale)
     {
         JoinedUser user;

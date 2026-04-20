@@ -29,13 +29,7 @@
         </introspection-scope>
       </schema-mapping>
     </data-source>
-    <data-source name="@db-bicycle-racing.mysql.database.azure.com" uuid="79fd6d8a-82c2-410f-bc2d-b7c6077b113e">
-      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MYSQL" exact-version="0" />
-      <secret-storage>master_key</secret-storage>
-      <user-name>student</user-name>
-      <schema-mapping />
-    </data-source>
-    <data-source name="@db-bicycle-racing.mysql.database.azure.com [2]" uuid="6703ebd2-53a4-425d-8332-9edea2d8ddb9">
+    <data-source name="@db-bicycle-racing.mysql.database.azure.com" uuid="872cc9aa-c10c-4fa5-833a-ab51e7e932fa">
       <database-info product="MySQL" version="8.0.42-azure" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)" dbms="MYSQL" exact-version="8.0.42" exact-driver-version="8.2">
         <extra-name-characters>#@</extra-name-characters>
         <identifier-quote-string>`</identifier-quote-string>

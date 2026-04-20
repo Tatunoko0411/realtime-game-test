@@ -8,22 +8,22 @@
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/08d02ade-f594-46f3-a87f-970602385fc8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/08d02ade-f594-46f3-a87f-970602385fc8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/da83090c-5e80-4981-8031-6c49b1a38cdd.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/da83090c-5e80-4981-8031-6c49b1a38cdd.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql/#ib_16384_0.dblwr" beforeDir="false" afterPath="$PROJECT_DIR$/mysql/#ib_16384_0.dblwr" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql/bicycle_racing/battle_logs.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/mysql/bicycle_racing/battle_logs.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql/bicycle_racing/battles.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/mysql/bicycle_racing/battles.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql/bicycle_racing/users.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/mysql/bicycle_racing/users.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql/binlog.index" beforeDir="false" afterPath="$PROJECT_DIR$/mysql/binlog.index" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql/ib_buffer_pool" beforeDir="false" afterPath="$PROJECT_DIR$/mysql/ib_buffer_pool" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql/ibdata1" beforeDir="false" afterPath="$PROJECT_DIR$/mysql/ibdata1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql/mysql.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/mysql/mysql.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql/undo_001" beforeDir="false" afterPath="$PROJECT_DIR$/mysql/undo_001" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql/undo_002" beforeDir="false" afterPath="$PROJECT_DIR$/mysql/undo_002" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Server/Models/Contexts/GameDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Server/Models/Contexts/GameDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Server/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Server/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Server/Services/MailService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Server/Services/MailService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Server/Services/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Server/Services/UserService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Server/StreamingHubs/RoomHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Server/StreamingHubs/RoomHub.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/config/database.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/config/database.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/Scenes/GameScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/Scenes/GameScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/Scenes/MatcingScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/Scenes/MatcingScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/Scenes/ResultScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/Scenes/ResultScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/Scenes/TitleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/Scenes/TitleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/img/UI/tutorial01.png" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/img/UI/tutorial01.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/GrpcChannelProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/GrpcChannelProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/NetWork/MagiconionModels/RoomModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/NetWork/MagiconionModels/RoomModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/NetWork/MagiconionModels/UserModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/NetWork/MagiconionModels/UserModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/NetWork/NetWorkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/NetWork/NetWorkManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/UI/LogManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/UI/LogManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/game/BikeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/game/BikeController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/title/TitleManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/Assets/script/title/TitleManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bicycle_racing.Unity/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../bicycle_racing.Unity/ProjectSettings/ProjectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +57,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/student/Documents/git/bicycle-racing-repair/src/bicycle_racing.Admin&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/student/Documents/git/bicycle_racing/src/bicycle_racing.Admin/app/src&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
@@ -101,17 +101,15 @@
       <workItem from="1767922620643" duration="830000" />
       <workItem from="1768220023555" duration="633000" />
       <workItem from="1769041752487" duration="3747000" />
-      <workItem from="1769401843919" duration="5511000" />
-      <workItem from="1769695380697" duration="2482000" />
-      <workItem from="1772725459178" duration="1786000" />
-      <workItem from="1772779596872" duration="320000" />
-      <workItem from="1772798533502" duration="6733000" />
-      <workItem from="1772895172598" duration="318000" />
-      <workItem from="1772895627914" duration="1004000" />
-      <workItem from="1772896956387" duration="4000" />
-      <workItem from="1772897123073" duration="19000" />
-      <workItem from="1772939437579" duration="20000" />
-      <workItem from="1772939465517" duration="16000" />
+      <workItem from="1772896867675" duration="11000" />
+      <workItem from="1772897121706" duration="2000" />
+      <workItem from="1772939436058" duration="5000" />
+      <workItem from="1772939483399" duration="705000" />
+      <workItem from="1774860527752" duration="174000" />
+      <workItem from="1775780189125" duration="629000" />
+      <workItem from="1776219846165" duration="1115000" />
+      <workItem from="1776222231323" duration="4415000" />
+      <workItem from="1776320201099" duration="606000" />
     </task>
     <servers />
   </component>

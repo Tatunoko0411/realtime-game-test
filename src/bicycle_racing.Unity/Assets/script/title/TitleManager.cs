@@ -57,26 +57,43 @@ public class TitleManager : MonoBehaviour
 
     [SerializeField] GameObject panel;
 
+    bool isChengeState;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
+        Screen.fullScreenMode = FullScreenMode.Windowed; // ウィンドウモード
+        Screen.SetResolution(1920, 854, false);          // 幅, 高さ, フルスクリーンかどうか
+
+
         netWorkManager = GameObject.Find("NetWorkManager").GetComponent<NetWorkManager>();
 
 
         StartObject.SetActive(true);
-       
+
+        isChengeState = false;
+
+
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Startだと取得タイミングが早くてエラーになるので、情報取得確認後、ステータス変更
         if (netWorkManager != null)
         {
             if (netWorkManager.myself != null)
             {
-                if (netWorkManager.myself.State != (int)FriendObject.State.Online)
+                if (!isChengeState)
                 {
-                    netWorkManager.ChangeState(FriendObject.State.Online);
+                    if (netWorkManager.myself.State != (int)FriendObject.State.Online)
+                    {
+                        netWorkManager.ChangeState(FriendObject.State.Online);
+                        isChengeState=true;
+                    }
                 }
             }
         }
@@ -100,7 +117,7 @@ public class TitleManager : MonoBehaviour
         GameManager.StageId = StageId;
 
        switch(StageId)
-        {
+        {//選択されたステージを中央に移動
             case 1:
                 Map1.transform.DOMove(CenterPos.position,0.5f);
                 break;
@@ -123,6 +140,10 @@ public class TitleManager : MonoBehaviour
         SEManager.PlaySE(SEManager.SE.Move);
     }
 
+
+    /// <summary>
+    /// プロフィール表示
+    /// </summary>
     public void OpenProfil()
     {
         SEManager.PlaySE(SEManager.SE.click);
@@ -141,6 +162,9 @@ public class TitleManager : MonoBehaviour
         win.text = "勝利回数：" + netWorkManager.myself.Win_count.ToString();
     }
 
+    /// <summary>
+    /// ユーザ検索語のUI切り替え
+    /// </summary>
     public async void FindUser()
     {
         SEManager.PlaySE(SEManager.SE.click);
@@ -170,6 +194,10 @@ public class TitleManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// フレンド申請送信
+    /// </summary>
+    /// <param name="id"></param>
     public async void SendFriendRequest(int id)
     {
        netWorkManager.SendMail(id,(int)MailObject.MailType.FriendRequest,
@@ -178,6 +206,9 @@ public class TitleManager : MonoBehaviour
         SEManager.PlaySE(SEManager.SE.click);
     }
 
+    /// <summary>
+    /// メール取得＆UI変更
+    /// </summary>
     public async void GetMail()
     {
         SEManager.PlaySE(SEManager.SE.click);
@@ -190,6 +221,8 @@ public class TitleManager : MonoBehaviour
         TutorialObject.SetActive(false);
         panel.SetActive(true);
 
+
+        //情報取得後オブジェクト生成
         Mail[] mails = await netWorkManager.GetMailAsync();
 
         foreach (Transform child in MailParent.transform)
@@ -220,6 +253,9 @@ public class TitleManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// フレンド欄の表示
+    /// </summary>
     public async void GetFriend()
     {
         SEManager.PlaySE(SEManager.SE.click);
@@ -232,6 +268,7 @@ public class TitleManager : MonoBehaviour
         TutorialObject.SetActive(false);
         panel.SetActive(true);
 
+        //情報取得後オブジェクト生成
         Friend[] friends = await netWorkManager.GetFriends();
 
         foreach(Transform child in FriendParent.transform)
@@ -265,6 +302,9 @@ public class TitleManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// チュートリアル表示
+    /// </summary>
     public void SetTutorial()
     {
         SEManager.PlaySE(SEManager.SE.click);
@@ -286,6 +326,10 @@ public class TitleManager : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// チュートリアル内の表示切り替え
+    /// </summary>
+    /// <param name="value"></param>
     public void ChengeTutorialCount(int value)
     {
         TutorialCount += value;
@@ -308,7 +352,9 @@ public class TitleManager : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// メイン画面に切り替え
+    /// </summary>
     public void BackMain()
     {
         SEManager.PlaySE(SEManager.SE.click);
@@ -322,12 +368,19 @@ public class TitleManager : MonoBehaviour
         panel.SetActive(false);
     }
 
+
+    /// <summary>
+    /// ユーザ名更新
+    /// </summary>
     public void UpdateName()
     {
         SEManager.PlaySE(SEManager.SE.click);
         netWorkManager.UpdateName(UpdateNameField.text);
     }
 
+    /// <summary>
+    ///スタート画面に遷移
+    /// </summary>
     public void BackStart()
     {
         StartObject.SetActive(true);

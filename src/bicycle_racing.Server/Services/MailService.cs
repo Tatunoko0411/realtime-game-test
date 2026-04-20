@@ -9,15 +9,8 @@ namespace bicycle_racing.Server.Services
     public class MailService : ServiceBase<IMailService>, IMailService
     {
 
-        /// <summary>
-        /// メール作成API
-        /// </summary>
-        /// <param name="SendId">送信したユーザーID</param>
-        /// <param name="ReceiveId">受け取るユーザーID</param>
-        /// <param name="Type">メールのタイプ</param>
-        /// <param name="content">メールの内容</param>
-        /// <returns>登録されたメールのID</returns>
-        public async UnaryResult<int> CreateMailAsync(int SendId, int ReceiveId, int Type, string content)
+        //メール作成API
+       public async UnaryResult<int> CreateMailAsync(int SendId, int ReceiveId, int Type, string content)
         {
             using var context = new GameDbContext();
 
@@ -36,12 +29,7 @@ namespace bicycle_racing.Server.Services
 
             return mail.Id;
         }
-        /// <summary>
-        /// メールステータス更新API
-        /// </summary>
-        /// <param name="ID"></param>
-        /// <param name="state"></param>
-        /// <returns></returns>
+        //メールステータス更新API
         public async UnaryResult<Mail> ChangeStateMailAsync(int ID, int state)
         {
             using var context = new GameDbContext();

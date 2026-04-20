@@ -13,13 +13,14 @@ public class CheckPoint : MonoBehaviour
     public Vector3 forward;
     public CheckPoint nextCheckPoint;
 
-    static List<CheckPoint> list = new List<CheckPoint>();
+    static public List<CheckPoint> list = new List<CheckPoint>();
 
     static public CheckPoint StartPoint => list[0];
 
     //自分自身をlistにつなげていきます
     void Awake()
     {
+        
         if (GameManager.StageId == stageId)
         {
             list.Add(this);

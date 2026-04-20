@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     public bool isStart;
     float WaitTime;
-    float MaxWaitTime = 3.0f;
+    float MaxWaitTime = 4.0f;
     bool allGoal;
 
     public List<BikeController> bikeControllers = new List<BikeController>();
@@ -36,6 +36,16 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]List<AudioSource> Bgms = new List<AudioSource>();
 
+    private void Awake()
+    {
+        CheckPoint.list = new List<CheckPoint>();
+
+        foreach (GameObject map in Maps)
+        {
+            map.SetActive(true);
+        }
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -44,6 +54,7 @@ public class GameManager : MonoBehaviour
 
         foreach (GameObject map in Maps)
         {
+            map.SetActive(true);
             map.SetActive(false);
         }
 
@@ -101,19 +112,35 @@ public class GameManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// リザルト遷移
+    /// </summary>
     public IEnumerator MoveResult()
     {
-        yield return new WaitForSeconds(5);
-
+        yield return new WaitForSeconds(3);
         Initiate.Fade("ResultScene", Color.black, 1.5f);
     }
 
+    /// <summary>
+    /// タイトル遷移
+    /// </summary>
     public void MoveTitle()
     {
-        Initiate.Fade("TitleScene", Color.black, 1.5f);
+        Initiate.Fade("TitleScene", Color.black, 0.5f);
         netWorkManager.LeaveRoom();
+
+        foreach (GameObject map in Maps)
+        {
+            map.SetActive(true);
+        }
+
+
     }
 
+    /// <summary>
+    /// スタート時のカウントダウン
+    /// </summary>
+    /// <returns></returns>
      public IEnumerator CountDown()
     {
         CountDownText.gameObject.SetActive(true);

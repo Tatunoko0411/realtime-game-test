@@ -10,6 +10,7 @@ using rayzngames;
 using UnityEngine.SceneManagement;
 using Newtonsoft.Json;
 using System.IO;
+using Unity.VisualScripting;
 
 [DefaultExecutionOrder(-10)]
 
@@ -34,7 +35,9 @@ public class NetWorkManager : MonoBehaviour
 
     bool isJoin = false;
 
-    [SerializeField]BikeController bikeController;
+    public bool isInit ;
+
+    [SerializeField]public BikeController bikeController;
 
 
     public async void Awake()
@@ -46,7 +49,7 @@ public class NetWorkManager : MonoBehaviour
         mailModel = GetComponent<MailModel>();
 
         DontDestroyOnLoad(this);
-
+        isInit = false;
         //接続
         try
         {
@@ -56,6 +59,9 @@ public class NetWorkManager : MonoBehaviour
         {
             LogManager.SetLogText(e.Message);
         }
+
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 0;
     }
 
     async void Start()
@@ -71,53 +77,25 @@ public class NetWorkManager : MonoBehaviour
         roomModel.OnGoalUser += this.OnGoalUser;
         roomModel.OnMenberConfirmed += this.OnMenberConfirmed;
         roomModel.OnStartGame += this.OnStartGame;
-        
-
-        bool isSuccess = LoadUserData();
-        if (isSuccess)
-        {
-            SaveUserData();
-        }
-        else
-        {
-          myUserId = await userModel.RegistUser(Guid.NewGuid().ToString());
-   
-            if(myUserId == 0)
-            {
-                //Debug.Log("RegistUser failed");
-                return;
-            }
-            SaveUserData();
-        }
 
 
-        try
-        {
-            // ユーザー情報を取得
-            myself = await userModel.GetUser(myUserId);
 
-            LogManager.SetLogText("ネットワークの接続に成功しました。");
-            ChangeState(FriendObject.State.Online);
-        }
-        catch (Exception e)
-        {
-           // LogManager.SetLogText("RegistUser failed");
-            Debug.LogException(e);
-        }
 
-        
 
     }
 
     private void OnApplicationQuit()
     {
-
+        Debug.Log("OnApplicationQuit開始");
         ChangeState(FriendObject.State.Offline);
-        SetRoom(0,"");
+       // SetRoom(0,"");
+        Debug.Log("OnApplicationQuIT終了");
     }
 
     private void FixedUpdate()
     {
+
+
 
         if (SceneManager.GetActiveScene().name == "GameScene")
         {
@@ -134,8 +112,55 @@ public class NetWorkManager : MonoBehaviour
         }
     }
 
+    private async void Update()
+    {
+        if (roomModel.ConnectionId != Guid.Empty && !isInit)
+        {
 
-    // ユーザー情報を読み込む
+            isInit = true;
+            bool isSuccess = LoadUserData();
+            if (isSuccess)
+            {
+                SaveUserData();
+            }
+            else
+            {
+                string name = "aaa";
+                Debug.Log($"新規作成中:{name}");
+                myUserId = await userModel.RegistUser(name);
+
+                if (myUserId == 0)
+                {
+                    //Debug.Log("RegistUser failed");
+                    return;
+                }
+                SaveUserData();
+            }
+
+
+            try
+            {
+                // ユーザー情報を取得
+                myself = await userModel.GetUser(myUserId);
+
+                LogManager.SetLogText("ネットワークの接続に成功しました。");
+                ChangeState(FriendObject.State.Online);
+            }
+            catch (Exception e)
+            {
+                // LogManager.SetLogText("RegistUser failed");
+                Debug.LogException(e);
+            }
+
+
+        }
+    }
+
+
+    /// <summary>
+    /// ユーザー情報を読み込む
+    /// </summary>
+    /// <returns></returns>
     public bool LoadUserData()
     {
         if (!File.Exists(Application.persistentDataPath + "/saveData.json"))
@@ -152,6 +177,9 @@ public class NetWorkManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// ユーザ情報のセーブ
+    /// </summary>
     public void SaveUserData()
     {
         SaveData saveData = new SaveData();
@@ -167,31 +195,53 @@ public class NetWorkManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// ユーザ情報取得
+    /// </summary>
+    /// <param name="name">取得したいユーザ名</param>
+    /// <returns></returns>
     public async Task<User> GetUser(string name)
     {
        return await userModel.GetUser(name);
     }
 
+    /// <summary>
+    /// フレンド登録
+    /// </summary>
+    /// <param name="ID">相手のユーザーID</param>
     public async void RegistFriend(int ID)
     {
         await userModel.RegistFriend(myUserId,ID);
     }
 
+    /// <summary>
+    /// 名前の更新
+    /// </summary>
+    /// <param name="name"></param>
     public async void UpdateName(string name)
     {
-        await userModel.UpdateUser(myUserId,name);
+       User user = await userModel.UpdateUser(myUserId,name);
+
+        myself.Name = user.Name;
     }
 
-    public async Task<User> UpdateUserCount(int play,int win)
+    /// <summary>
+    /// ユーザーの対戦履歴更新
+    /// </summary>
+    /// <param name="play">プレイ回数</param>
+    /// <param name="win">勝利回数</param>
+    /// <returns></returns>
+    public async void UpdateUserCount(int play,int win)
     {
-       return await userModel.UpdateUserCountAsync(myUserId,play,win);
+       myself = await userModel.UpdateUserCountAsync(myUserId,play,win);
     }
 
     public async void JoinRoom(int StageId)
     {
         int ID = myUserId;
+        characterList = new Dictionary<Guid, GameObject>();
 
-        if(myself.Room_name != "")
+        if (myself.Room_name != "")
         {
             //ルーム指定で入室
             await roomModel.JoinFriendAsync(ID,StageId,myself.Room_name);
@@ -211,6 +261,7 @@ public class NetWorkManager : MonoBehaviour
     public void SetPlayers()
     {
         GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        characterList = new Dictionary<Guid, GameObject>();
 
         if (gameManager != null)
         {
@@ -220,7 +271,7 @@ public class NetWorkManager : MonoBehaviour
             //プレイヤー配置
             foreach (JoinedUser joinedUser in roomModel.userTable.Values)
             {
-
+                cnt++;
                 // すでに表示済みのユーザーは追加しない
                 if (characterList.ContainsKey(joinedUser.ConnectionId))
                 {
@@ -236,6 +287,7 @@ public class NetWorkManager : MonoBehaviour
                     bikeController.gameManager.transform.rotation = new Quaternion(0,-90,0,0);
                     bikeController.NameText.text = joinedUser.UserData.Name;
                     isJoin = true;
+                    cnt++;
 
                 }
                 else
@@ -246,14 +298,16 @@ public class NetWorkManager : MonoBehaviour
                     characterObject.transform.rotation =  new Quaternion(0, -90, 0, 0);
                     BikeController bike = characterObject.GetComponent<BikeController>();
                     bike.NameText.text = joinedUser.UserData.Name;
+                    bike.enabled = true;
+                    bike.controllingBike = false;
 
 
-                 
+
 
                     characterList[joinedUser.ConnectionId] = characterObject;//フィールドで保持
                 }
 
-                cnt++;
+               
             }
         }
     }
@@ -342,26 +396,16 @@ public class NetWorkManager : MonoBehaviour
     private void OnJoinedUser(JoinedUser user)
     {
 
-        MatchingManager matchingManager = GameObject.Find("MatchingManager").GetComponent<MatchingManager>();   
+        MatchingManager matchingManager = GameObject.Find("MatchingManager").GetComponent<MatchingManager>();
+        characterList = new Dictionary<Guid, GameObject>();
         // すでに表示済みのユーザーは追加しない
         if (characterList.ContainsKey(user.ConnectionId))
         {
             return;
         }
 
-        // 自分は追加しない
-        if (user.ConnectionId == roomModel.ConnectionId)
-        {
-            if (user.JoinOrder == 0)
-            {
-                matchingManager.isHost = true;
-                LogManager.SetLogText("入室しました。");
-            }
 
-            isJoin = true;
-            //return;  
-        }
-
+  
         GameObject obj = Instantiate(characterPrefab,
             matchingManager.PlayerPos[user.JoinOrder].position,
             Quaternion.identity);
@@ -376,6 +420,24 @@ public class NetWorkManager : MonoBehaviour
 
         Vector3 direction = Camera.main.transform.position - bike.NameText.transform.position;
         bike.NameText.transform.rotation = Quaternion.LookRotation(-direction);
+
+        if (user.ConnectionId == roomModel.ConnectionId)
+        {
+            if (user.JoinOrder == 0)
+            {
+                matchingManager.isHost = true;
+                LogManager.SetLogText("入室しました。");
+            }
+
+            isJoin = true;
+            //return;  
+        }
+        else
+        {
+            characterList[user.ConnectionId] = obj;//フィールドで保持
+
+        }
+
     }
 
     //ユーザーが退室した時の処理
@@ -460,11 +522,16 @@ public class NetWorkManager : MonoBehaviour
         {
             putItem = bike.BedPrefab;
         }
+        else
+        {
+            bike.UseItem(ItemType);
+            return;
+        }
 
         Vector3 PutPos = new Vector3(pos.x, pos.y - 0.5f, pos.z);
         //Instantiate(gameManager.Items[ItemType - 1],
          Instantiate(putItem,
-           PutPos - (bike.transform.forward * 2f),
+           PutPos - (bike.transform.forward * 4f),
             Quaternion.identity);
     }
 

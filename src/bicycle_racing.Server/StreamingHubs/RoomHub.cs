@@ -155,8 +155,8 @@ namespace bicycle_racing.Server.StreamingHubs
         // 切断時の処理
         protected override async ValueTask OnDisconnected()
         {
+           
 
-            Console.WriteLine(" OnDisconnected");
             if (this.roomContext != null)
             {
                 await LeaveAsync();
@@ -166,36 +166,34 @@ namespace bicycle_racing.Server.StreamingHubs
            // return default;
         }
 
-        // 接続ID取得w
+        // 接続ID取得
         public Task<Guid> GetConnectionId()
         {
             return Task.FromResult<Guid>(this.ConnectionId);
         }
 
 
-        public async Task ReadyAsync()
+        public Task ReadyAsync()
         {
-            lock (this.roomContext)
+
+            //準備出来たことを自分のRoomUserDataに保存
+            var roomUserData = this.roomContext.RoomUserDataList[this.ConnectionId];
+            roomUserData.isReady = true;
+
+            //全員準備できたか判定
+            bool isReady = true;
+            var roomUserDataList = this.roomContext.RoomUserDataList.Values.ToArray();
+            foreach (var targetRoomUserData in roomUserDataList)
             {
-                //準備出来たことを自分のRoomUserDataに保存
-                var roomUserData = this.roomContext.RoomUserDataList[this.ConnectionId];
-                roomUserData.isReady = true;
-
-                //全員準備できたか判定
-                bool isReady = true;
-                var roomUserDataList = this.roomContext.RoomUserDataList.Values.ToArray();
-                foreach (var targetRoomUserData in roomUserDataList)
+                if(!targetRoomUserData.isReady)
                 {
-                    if (!targetRoomUserData.isReady)
-                    {
-                       return;
-                    }
+                    return Task.CompletedTask;
                 }
-
-                Console.WriteLine("開始します");
-                this.roomContext.Group.All.OnStart();
-               
             }
+
+            Console.WriteLine("開始します");
+            this.roomContext.Group.All.OnStart();
+            return Task.CompletedTask;
         }
 
         public Task LeaveAsync()
