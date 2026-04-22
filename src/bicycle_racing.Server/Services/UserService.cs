@@ -13,6 +13,8 @@ namespace realtime_game.Server.Services
 
         public async UnaryResult<int> RegistUserAsync(string name)
         {
+            Console.WriteLine("RegistUserAsync Start");
+            Console.WriteLine($"argument name is {name}");
             using var context = new GameDbContext();
             //バリデーションチェック(名前登録済みかどうか)
             if (context.Users.Count() > 0 &&
@@ -32,6 +34,9 @@ namespace realtime_game.Server.Services
             user.Updated_at = DateTime.Now;
             context.Users.Add(user);
             await context.SaveChangesAsync();
+
+            Console.WriteLine("RegistUserAsync Complete");
+
             return user.Id;
         }
 

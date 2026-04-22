@@ -22,7 +22,7 @@ namespace bicycle_racing.Server.Models.Contexts
         readonly string connectionString =
             "server=localhost;database=bicycle_racing;user=jobi;password=jobi;";
 #else
-readonly string connectionString = "server=db-ge0202400.mysql.database.azure.com;port=3306;database=realtime_game241202;user=student;password=Yoshidajobi2024;SslMode=Required;";
+readonly string connectionString = "server=db-bicycle-racing.mysql.database.azure.com;port=3306;database=realtime_game241202;user=student;password=Yoshidajobi2024;SslMode=Required;";
 
 #endif
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

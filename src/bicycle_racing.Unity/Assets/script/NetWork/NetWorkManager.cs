@@ -125,7 +125,7 @@ public class NetWorkManager : MonoBehaviour
             }
             else
             {
-                string name = "aaa";
+                string name = Guid.NewGuid().ToString();
                 Debug.Log($"V‹Kì¬’†:{name}");
                 myUserId = await userModel.RegistUser(name);
 
